@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>厂房泄压面积计算工具 - GB50016-2014</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .formula {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff3cd;
+            border-radius: 4px;
+        }
+        .standard-reference {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+        }
+        .segment-info {
+            margin-left: 20px;
+            background-color: #f0f8ff;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>厂房泄压面积计算工具 - GB50016-2014</h1>
+        
+        <div class="standard-reference">
+            <h3>规范依据：</h3>
+            <p>根据《建筑设计防火规范》GB50016-2014(2018年版)第3.6节规定：</p>
+            <ul>
+                <li>有爆炸危险的甲、乙类厂房应设置泄压设施。</li>
+                <li>泄压面积的计算应考虑厂房长径比。</li>
+                <li>计算泄压面积时，长径比不应大于3。当长径比大于3时，应将厂房划分为多个计算段。</li>
+                <li>泄压面积计算公式：A = 10 × C × V^(2/3)，其中C为泄压比值，V为厂房体积。</li>
+            </ul>
+        </div>
+        
+        <div class="formula">
+            <strong>计算公式：</strong>
+            <p>长径比计算公式：长径比 = 长 × [（宽 + 高） × 2] / (4 × 宽 × 高)</p>
+            <p>泄压面积计算公式：A = 10 × C × V^(2/3)</p>
+            <p>分段计算：</p>
+            <ul>
+                <li>当 0 < 长径比 ≤ 3 时，不需要分段计算</li>
+                <li>当 3 < 长径比 ≤ 6 时，需要分两段计算</li>
+                <li>当 6 < 长径比 ≤ 9 时，需要分三段计算</li>
+                <li>依此类推，每增加3的长径比，分段数加1</li>
+            </ul>
+            <p>根据厂房内爆炸性危险物质的类别确定泄压比值C：</p>
+            <table>
+                <tr>
+                    <th>厂房内爆炸性危险物质的类别</th>
+                    <th>泄压比C（m²/m³）</th>
+                </tr>
+                <tr>
+                    <td>氨以及粮食、纸、皮革、铅、铬、铜等K尘<10MPa·m·s⁻¹的粉尘</td>
+                    <td>≥0.030</td>
+                </tr>
+                <tr>
+                    <td>木屑、炭屑、煤粉、锑、锡等10MPa·m·s⁻¹≤K尘≤30MPa·m·s⁻¹的粉尘</td>
+                    <td>≥0.055</td>
+                </tr>
+                <tr>
+                    <td>丙酮、汽油、甲醇、液化石油气、甲烷、喷漆间或干燥室以及苯酚树脂、铝、镁、锆等K尘>30MPa·m·s⁻¹的粉尘</td>
+                    <td>≥0.110</td>
+                </tr>
+                <tr>
+                    <td>乙烯</td>
+                    <td>≥0.16</td>
+                </tr>
+                <tr>
+                    <td>乙炔</td>
+                    <td>≥0.20</td>
+                </tr>
+                <tr>
+                    <td>氢</td>
+                    <td>≥0.25</td>
+                </tr>
+            </table>
+        </div>
+        
+        <form id="calculateForm">
+            <div class="form-group">
+                <label for="hazardousMaterial">爆炸性危险物质类别：</label>
+                <select id="hazardousMaterial" required>
+                    <option value="">请选择物质类别</option>
+                    <option value="0.030">氨以及粮食、纸、皮革、铅、铬、铜等K尘<10MPa·m·s⁻¹的粉尘 (C=0.030)</option>
+                    <option value="0.055">木屑、炭屑、煤粉、锑、锡等10MPa·m·s⁻¹≤K尘≤30MPa·m·s⁻¹的粉尘 (C=0.055)</option>
+                    <option value="0.110">丙酮、汽油、甲醇、液化石油气、甲烷、喷漆间或干燥室以及苯酚树脂、铝、镁、锆等K尘>30MPa·m·s⁻¹的粉尘 (C=0.110)</option>
+                    <option value="0.16">乙烯 (C=0.16)</option>
+                    <option value="0.20">乙炔 (C=0.20)</option>
+                    <option value="0.25">氢 (C=0.25)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="length">厂房长度 (米)：</label>
+                <input type="number" id="length" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="width">厂房宽度 (米)：</label>
+                <input type="number" id="width" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="height">厂房高度 (米)：</label>
+                <input type="number" id="height" step="0.01" min="0" required>
+            </div>
+            
+            <button type="button" onclick="calculate()">计算泄压面积</button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <div class="info">
+            <h3>使用说明：</h3>
+            <p>1. 选择厂房内爆炸性危险物质的类别</p>
+            <p>2. 输入厂房的长度、宽度和高度</p>
+            <p>3. 点击"计算泄压面积"按钮</p>
+            <p>4. 查看计算结果和详细说明</p>
+            <p>5. 如果长径比超过3，工具会自动进行分段计算并显示每个分段的泄压面积</p>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            // 获取用户输入
+            const c = parseFloat(document.getElementById('hazardousMaterial').value);
+            const length = parseFloat(document.getElementById('length').value);
+            const width = parseFloat(document.getElementById('width').value);
+            const height = parseFloat(document.getElementById('height').value);
+            
+            // 验证输入
+            if (isNaN(c)) {
+                showAlert('请选择爆炸性危险物质类别', 'error');
+                return;
+            }
+            
+            if (isNaN(length) || isNaN(width) || isNaN(height) || length <= 0 || width <= 0 || height <= 0) {
+                showAlert('请输入有效的厂房尺寸（必须大于0）', 'error');
+                return;
+            }
+            
+            // 计算长径比
+            const lengthToDiameterRatio = length * ((width + height) * 2) / (4 * width * height);
+            
+            // 确定分段数
+            const segments = Math.max(1, Math.ceil(lengthToDiameterRatio / 3));
+            
+            // 计算分段后的长
+            const segmentLength = length / segments;
+            
+            // 计算每个分段的体积和泄压面积
+            const segmentVolume = segmentLength * width * height;
+            const segmentArea = 10 * c * Math.pow(segmentVolume, 2/3);
+            
+            // 计算总泄压面积
+            const totalArea = segmentArea * segments;
+            
+            // 显示结果
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h3>计算结果：</h3>
+                <p>泄压比值：${c} m²/m³</p>
+                <p>厂房长度：${length.toFixed(2)} 米</p>
+                <p>厂房宽度：${width.toFixed(2)} 米</p>
+                <p>厂房高度：${height.toFixed(2)} 米</p>
+                <p>厂房体积：${(length * width * height).toFixed(2)} 立方米</p>
+                <p>长径比：${lengthToDiameterRatio.toFixed(2)}</p>
+                <p>分段数：${segments} 段</p>
+                <p><strong>总泄压面积：${totalArea.toFixed(2)} 平方米</strong></p>
+                <h4>分段计算详情：</h4>
+                ${segments > 1 ? `
+                    <div class="segment-info">
+                        <p>每个分段的长度：${segmentLength.toFixed(2)} 米</p>
+                        <p>每个分段的体积：${segmentVolume.toFixed(2)} 立方米</p>
+                        <p>每个分段的泄压面积：${segmentArea.toFixed(2)} 平方米</p>
+                        <p>每个分段的计算公式：A = 10 × C × V^(2/3) = 10 × ${c} × ${Math.pow(segmentVolume, 2/3).toFixed(4)} = ${segmentArea.toFixed(2)} 平方米</p>
+                    </div>
+                ` : ''}
+                <h4>详细计算过程：</h4>
+                <p>1. 计算长径比：</p>
+                <p>长径比 = 长 × [（宽 + 高） × 2] / (4 × 宽 × 高) = ${length.toFixed(2)} × [(${width.toFixed(2)} + ${height.toFixed(2)}) × 2] / (4 × ${width.toFixed(2)} × ${height.toFixed(2)}) = ${lengthToDiameterRatio.toFixed(2)}</p>
+                <p>2. 确定分段数：</p>
+                <p>根据长径比，确定分段数为：${segments} 段</p>
+                ${segments > 1 ? `
+                    <p>3. 分段后的长度：原长度 / 分段数 = ${length.toFixed(2)} / ${segments} = ${segmentLength.toFixed(2)} 米</p>
+                    <p>4. 分段体积计算：</p>
+                    <p>分段体积 = 分段长度 × 宽 × 高 = ${segmentLength.toFixed(2)} × ${width.toFixed(2)} × ${height.toFixed(2)} = ${segmentVolume.toFixed(2)} 立方米</p>
+                ` : ''}
+                <p>5. 泄压面积计算：</p>
+                <p>泄压面积公式：A = 10 × C × V^(2/3)</p>
+                <p>其中：</p>
+                <ul>
+                    <li>C = ${c}（根据爆炸性危险物质类别确定的泄压比值）</li>
+                    <li>V = 分段体积（如果分段）或总体积（如果不分段）</li>
+                    <li>10 是规范中的系数</li>
+                </ul>
+                <p>计算过程：</p>
+                <p>A = 10 × ${c} × (${Math.pow((segments > 1 ? segmentVolume : length * width * height), 2/3).toFixed(4)}) = ${totalArea.toFixed(2)} 平方米</p>
+            `;
+            
+            resultDiv.className = 'success';
+            resultDiv.style.display = 'block';
+        }
+        
+        function showAlert(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p>${message}</p>`;
+            resultDiv.className = type;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+    
+    <footer>
+        作者： Jay🇨🇳
+    </footer>
+</body>
+</html>
